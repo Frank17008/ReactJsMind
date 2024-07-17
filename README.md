@@ -1,5 +1,7 @@
 # jsMind React 版
 
+![reactjsmind](https://img.shields.io/badge/ReactJSMind-JsMind?style=flat&logo=webcomponentsdotorg&color=%23333) ![node](<https://img.shields.io/badge/node-v16.20.0-brightgreen?style=flat&logo=nodedotjs&color=rgb(0%2C126%2C198)>) ![size](<https://img.shields.io/badge/Unpacked%20size-25.6%20KB-brightgreen?style=flat&color=rgb(0%2C126%2C198)>) ![webpack](https://img.shields.io/badge/webpack-v5.93-brightgreen?style=plastic&logo=webpack) ![jsMind](https://img.shields.io/badge/jsMind-0.8.5%2B-brightgreen?style=plastic&logo=npm)
+
 此项目是基于[jsMind](https://github.com/hizzgdev/jsmind)封装的 React 版本，方便开发者直接以组件形式使用。
 
 1. 安装
@@ -14,10 +16,22 @@ yarn add react-jsmind
 
 2. 基本使用
 
+![react-jsmind-demo](demo.gif)
+
 ```tsx
+import ReactJsMind from 'react-jsmind'
+import 'react-jsmind/dist/index.min.css'
+
 const App = () => {
-  const mindRef = useState(null)
-  const mockData = {
+  const mindRef: any = useState(null)
+  const [editable, setEditable] = useState(true)
+  const getData = () => {
+    if (mindRef.current) {
+      const data = mindRef.current.getData()
+      alert(JSON.stringify(data))
+    }
+  }
+  const NodeTreeData = {
     meta: { name: 'mind图', author: 'Your Name', version: '0.8.5' },
     format: 'node_tree',
     data: {
@@ -39,12 +53,19 @@ const App = () => {
       ],
     },
   }
+  const enableEdit = () => {
+    setEditable(!editable)
+  }
   const onNodeClick = (node) => {
     console.log('点击的节点', node)
   }
   return (
     <div style={{ width: '100%', height: 800 }}>
-      <ReactJsMind ref={mindRef} options={{ editable: true }} data={mockData} onClick={onNodeClick} />
+      <div className='btns'>
+        <button onClick={getData}>获取数据</button>
+        <button onClick={enableEdit}>{editable ? '关闭' : '开启'}编辑</button>
+      </div>
+      <ReactJsMind ref={mindRef} options={{ editable }} data={NodeTreeData} onClick={onNodeClick} />
     </div>
   )
 }
