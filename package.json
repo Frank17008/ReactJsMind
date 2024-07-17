@@ -2,7 +2,11 @@
   "name": "react-jsmind",
   "version": "1.0.0",
   "description": "一个基于jsMind的react思维导图组件",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./dist/index.min.css": "./dist/index.min.css"
+  },
   "scripts": {
     "dev": "webpack-dev-server --config config/webpack.dev.config.js",
     "build": "webpack --config config/webpack.prod.config.js",
@@ -12,6 +16,10 @@
     "react",
     "jsmind",
     "思维导图"
+  ],
+  "files": [
+    "dist",
+    "examples"
   ],
   "engines": {
     "node": ">= 16.20.0"

@@ -1,3 +1,5 @@
+import React from 'react'
+
 export type JsMindDataType = TreeNode | ArrayTreeNode | string | undefined
 
 export interface JsMindProps {
@@ -223,7 +225,11 @@ export interface TreeNode {
   /**
    * 节点背景色
    */
-  'background-color'?: React.CSSProperties
+  'background-color'?: React.CSSProperties['color']
+  /**
+   * 节点前景色
+   */
+  'foreground-color'?: React.CSSProperties['color']
 }
 
 export interface ArrayTreeNode extends Omit<TreeNode, 'children'> {
