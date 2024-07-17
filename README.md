@@ -1,6 +1,6 @@
 # jsMind React 版
 
-![reactjsmind](https://img.shields.io/badge/ReactJSMind-JsMind?style=flat&logo=webcomponentsdotorg&color=%23333) ![node](<https://img.shields.io/badge/node-v16.20.0-brightgreen?style=flat&logo=nodedotjs&color=rgb(0%2C126%2C198)>) ![size](<https://img.shields.io/badge/Unpacked%20size-25.6%20KB-brightgreen?style=flat&color=rgb(0%2C126%2C198)>) ![webpack](https://img.shields.io/badge/webpack-v5.93-brightgreen?style=plastic&logo=webpack) ![jsMind](https://img.shields.io/badge/jsMind-0.8.5%2B-brightgreen?style=plastic&logo=npm)
+![reactjsmind](https://img.shields.io/badge/ReactJSMind-JsMind?style=flat&logo=webcomponentsdotorg&color=%23333) ![node](<https://img.shields.io/badge/node-v16.20.0-brightgreen?style=flat&logo=nodedotjs&color=rgb(0%2C126%2C198)>) ![size](<https://img.shields.io/badge/packed%20size-27.9%20KB-brightgreen?style=flat&color=rgb(0%2C126%2C198)>) ![webpack](https://img.shields.io/badge/webpack-v5.93-brightgreen?style=plastic&logo=webpack) ![jsMind](https://img.shields.io/badge/jsMind-0.8.5%2B-brightgreen?style=plastic&logo=npm)
 
 此项目是基于[jsMind](https://github.com/hizzgdev/jsmind)封装的 React 版本，方便开发者直接以组件形式使用。
 
