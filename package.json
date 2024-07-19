@@ -19,7 +19,8 @@
   ],
   "files": [
     "dist",
-    "examples"
+    "examples",
+    "demo.gif"
   ],
   "engines": {
     "node": ">= 16.20.0"
