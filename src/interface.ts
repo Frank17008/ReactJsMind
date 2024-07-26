@@ -65,7 +65,7 @@ export interface JsMindOptions {
      * 线条颜色
      * @default #555
      */
-    line_color?: React.CSSProperties['color']
+    line_color?: React.CSSProperties
   }
   /**
    * 布局配置
@@ -142,13 +142,8 @@ export interface JsMindInstance {
   disable_edit: () => void
   get_node: (nodeId: string) => JsMindDataType
   get_data: () => JsMindDataType
-  set_node_font_style: (
-    nodeid: string,
-    size: React.CSSProperties['fontSize'],
-    weight: React.CSSProperties['fontWeight'],
-    style: React.CSSProperties['fontStyle']
-  ) => void
-  set_node_color: (node_id: string, bg_color: React.CSSProperties['color'], fg_color: React.CSSProperties['color']) => void
+  set_node_font_style: (nodeid: string, size: React.CSSProperties, weight: React.CSSProperties, style: React.CSSProperties) => void
+  set_node_color: (node_id: string, bg_color: React.CSSProperties, fg_color: React.CSSProperties) => void
   add_node: (
     parent_node: Omit<JsMindDataType, 'undefined'>,
     node_id: string,
@@ -165,13 +160,8 @@ export interface JsMindRefValue {
   getInstance: () => JsMindInstance | null
   screenShot: () => void
   getData: () => JsMindDataType
-  setNodeFontStyle: (
-    nodeid: string,
-    size: React.CSSProperties['fontSize'],
-    weight: React.CSSProperties['fontWeight'],
-    style: React.CSSProperties['fontStyle']
-  ) => void
-  setNodeColor: (node_id: string, bg_color: React.CSSProperties['color'], fg_color: React.CSSProperties['color']) => void
+  setNodeFontStyle: (nodeid: string, size: React.CSSProperties, weight: React.CSSProperties, style: React.CSSProperties) => void
+  setNodeColor: (node_id: string, bg_color: React.CSSProperties, fg_color: React.CSSProperties) => void
   addNode: (
     parent_node: Omit<JsMindDataType, 'undefined'>,
     node_id: string,
@@ -225,11 +215,11 @@ export interface TreeNode {
   /**
    * 节点背景色
    */
-  'background-color'?: React.CSSProperties['color']
+  'background-color'?: React.CSSProperties
   /**
    * 节点前景色
    */
-  'foreground-color'?: React.CSSProperties['color']
+  'foreground-color'?: React.CSSProperties
 }
 
 export interface ArrayTreeNode extends Omit<TreeNode, 'children'> {
