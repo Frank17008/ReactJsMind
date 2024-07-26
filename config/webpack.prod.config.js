@@ -11,6 +11,7 @@ const prodConfig = {
   output: {
     path: path.join(__dirname, '../dist/'),
     filename: 'index.js',
+    clean: true,
     // library: {
     //   name: "react-jsmind"
     //   type: 'umd',
