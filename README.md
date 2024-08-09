@@ -77,7 +77,7 @@ const App = () => {
 
     2. ReactJsMind 组件 `options` 参数配置请参考[jsMind 参数配置](https://github.com/hizzgdev/jsmind/blob/master/docs/zh/2.options.md); `data` 参数配置请参考[jsMind 数据格式](https://github.com/hizzgdev/jsmind/blob/master/docs/zh/1.usage.md)
 
-    3. ReactJsMind 组件默认只支持`onClick`、`onMouseOver`、`onMouseUut`、`onKeyDown`、`onKeyUp`、`onDoubleClick` 事件
+    3. ReactJsMind 组件只支持`onClick`、`onMouseOver`、`onMouseOut`、`onMouseLeave`、`onMouseLeave`、`onContextMenu`、`onKeyUp`、`ondblClick` 事件
     4. ReactJsMind 组件只对外暴露了如下几种常用方法, 可以通过 `mindRef.current`调用, 如果想要其他方法，通过 `mindRef.current.getInstance()` 获取到 `jsMind` 实例后调用，具体参考[jsMind 节点操作方法](https://github.com/hizzgdev/jsmind/blob/master/docs/zh/3.operation.md)
 
 |     _方法名_     |                                                                                         参数                                                                                          |            _描述_            |

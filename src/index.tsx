@@ -82,7 +82,8 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     }
   })
 
-  const handleEvent = (e: any, eventType: string) => {
+  const handleEvent = (e: Event, eventType: string) => {
+    e?.preventDefault();
     const target = e.target as HTMLElement
     const nodeId = target.getAttribute('nodeid')
     if (nodeId) {

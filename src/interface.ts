@@ -9,7 +9,8 @@ export interface JsMindProps {
   onMouseOver?: (node: JsMindDataType) => void
   onMouseUut?: (node: JsMindDataType) => void
   onKeyDown?: (node: JsMindDataType) => void
-  ondbClick?: (node: JsMindDataType) => void
+  ondblClick?: (node: JsMindDataType) => void
+  onContextMenu?: (node: JsMindDataType) => void
 }
 
 export interface JsMindOptions {
