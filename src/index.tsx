@@ -1,13 +1,14 @@
 /**
  * 基于jsmind的React组件
+ * https://gitee.com/314079846/jsmind/blob/master/docs/zh/3.operation.md
  */
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import jsMind from 'jsmind'
-import 'jsmind/draggable-node'
-import 'jsmind/style/jsmind.css'
-import './screenshot'
-import { JsMindDataType, JsMindInstance, JsMindProps, JsMindRefValue } from './interface'
-import './index.less'
+import jsMind from 'jsmind';
+import 'jsmind/draggable-node';
+import 'jsmind/style/jsmind.css';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import './index.scss';
+import { JsMindDataType, JsMindInstance, JsMindProps, JsMindRefValue } from './interface';
+import './screenshot';
 
 const defaultOptions = {
   container: 'jsmind_container',
@@ -30,15 +31,15 @@ const defaultOptions = {
       // 配置缩放
       min: 0.5, // 最小的缩放比例
       max: 2.1, // 最大的缩放比例
-      step: 0.1, // 缩放比例间隔
+      step: 0.1 // 缩放比例间隔
     },
-    custom_node_render: null, // 自定义的节点渲染方法
+    custom_node_render: null // 自定义的节点渲染方法
   },
   layout: {
     hspace: 30, // 节点之间的水平间距
     vspace: 20, // 节点之间的垂直间距
     pspace: 13, // 节点与连接线之间的水平间距（用于容纳节点收缩/展开控制器）
-    cousin_space: 0, // 相邻节点的子节点之间的额外的垂直间距
+    cousin_space: 0 // 相邻节点的子节点之间的额外的垂直间距
   },
   shortcut: {
     enable: true, // 是否启用快捷键
@@ -53,19 +54,19 @@ const defaultOptions = {
       left: 37, // <Left>
       up: 38, // <Up>
       right: 39, // <Right>
-      down: 40, // <Down>
-    },
-  },
-}
+      down: 40 // <Down>
+    }
+  }
+};
 
 const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps, ref) => {
-  const EVENT_TYPE = ['onClick', 'onMouseOver', 'onMouseUut', 'onKeyDown', 'onKeyUp', 'onDoubleClick']
+  const EVENT_TYPE = ['onClick', 'onMouseOver', 'onMouseOut', 'onMouseLeave', 'onKeyDown', 'onKeyUp', 'ondblClick', 'onContextMenu'];
 
-  const jsMindRef = useRef<JsMindInstance | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [isReady, setIsReady] = useState<boolean>(false)
+  const jsMindRef = useRef<JsMindInstance | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
-  const { data, options = {} } = props
+  const { data, options = {} } = props;
 
   useImperativeHandle(ref, () => {
     return {
@@ -78,59 +79,63 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
         jsMindRef?.current?.add_node(parent_node, node_id, topic, data, direction),
       removeNode: (node): boolean => !!jsMindRef?.current?.remove_node(node),
       setNodeColor: (nodeId, bg_color, fg_color) => jsMindRef?.current?.set_node_color(nodeId, bg_color, fg_color),
-      setNodeFontStyle: (nodeId, size, weight, style) => jsMindRef?.current?.set_node_font_style(nodeId, size, weight, style),
-    }
-  })
+      setNodeFontStyle: (nodeId, size, weight, style) => jsMindRef?.current?.set_node_font_style(nodeId, size, weight, style)
+    };
+  });
 
-  const handleEvent = (e: Event, eventType: string) => {
+  const handleEvent = useCallback((e: Event, eventType: string) => {
     e?.preventDefault();
-    const target = e.target as HTMLElement
-    const nodeId = target.getAttribute('nodeid')
+    const target = e.target as HTMLElement;
+    const nodeId = target.getAttribute('nodeid');
     if (nodeId) {
       // 获取节点
-      const node = jsMindRef.current?.get_node(nodeId)
-      props?.[eventType]?.(node)
+      const node = jsMindRef.current?.get_node(nodeId);
+      props?.[eventType]?.(node);
     }
-  }
+  }, []);
+  const createEventHandler = useCallback((eventType: string) => (e: Event) => handleEvent(e, eventType), [handleEvent]);
+
   const registerEvents = () => {
-    const container = containerRef.current
+    const container = containerRef.current;
     if (container) {
       EVENT_TYPE.forEach((type: string) => {
-        const nativeEventType = type.replace(/^on/, '').toLocaleLowerCase()
-        container?.addEventListener(nativeEventType, (e) => handleEvent(e, type))
-      })
+        const nativeEventType = type.replace(/^on/, '').toLocaleLowerCase();
+        container.addEventListener(nativeEventType, createEventHandler(type));
+      });
     }
-  }
+  };
   const unRegisterEvents = () => {
-    const container = containerRef.current
+    const container = containerRef.current;
     if (container) {
       EVENT_TYPE.forEach((type: string) => {
-        container?.removeEventListener(type, (e) => handleEvent(e, type))
-      })
+        const nativeEventType = type.replace(/^on/, '').toLocaleLowerCase();
+        container.removeEventListener(nativeEventType, createEventHandler(type));
+      });
     }
-  }
+  };
   useEffect(() => {
     if (options.editable && jsMindRef.current) {
-      jsMindRef.current.enable_edit()
+      jsMindRef.current.enable_edit();
     } else {
-      jsMindRef.current?.disable_edit()
+      jsMindRef.current?.disable_edit();
     }
-  }, [options])
+  }, [options]);
   useEffect(() => {
     if (isReady) {
-      jsMindRef?.current?.show(data)
+      jsMindRef?.current?.show(data);
     }
-  }, [data, isReady])
-  useEffect(() => {
-    const __options = { ...defaultOptions, ...options }
-    jsMindRef.current = new jsMind(__options)
-    registerEvents()
-    setIsReady(true)
-    return () => {
-      unRegisterEvents()
-    }
-  }, [])
-  return <div ref={containerRef} id='jsmind_container' style={{ width: '100%', height: '100%' }}></div>
-})
+  }, [data, isReady]);
 
-export default ReactJsMind
+  useEffect(() => {
+    const __options = { ...defaultOptions, ...options };
+    jsMindRef.current = new jsMind(__options);
+    registerEvents();
+    setIsReady(true);
+    return () => {
+      unRegisterEvents();
+    };
+  }, []);
+  return <div ref={containerRef} id="jsmind_container" style={{ width: '100%', height: '100%' }}></div>;
+});
+
+export default React.memo(ReactJsMind);
