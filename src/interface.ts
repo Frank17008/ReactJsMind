@@ -1,15 +1,15 @@
-import React from 'react'
-
 export type JsMindDataType = TreeNode | ArrayTreeNode | string | undefined
 
 export interface JsMindProps {
   data?: JsMindData
   options?: Omit<JsMindOptions, 'container'>
   onClick?: (node: JsMindDataType) => void
-  onMouseOver?: (node: JsMindDataType) => void
-  onMouseUut?: (node: JsMindDataType) => void
-  onKeyDown?: (node: JsMindDataType) => void
   ondblClick?: (node: JsMindDataType) => void
+  onMouseOver?: (node: JsMindDataType) => void
+  onMouseOut?: (node: JsMindDataType) => void
+  onMouseLeave?: (node: JsMindDataType) => void
+  onKeyDown?: (node: JsMindDataType) => void
+  onKeyUp?: (node: JsMindDataType) => void
   onContextMenu?: (node: JsMindDataType) => void
 }
 
@@ -66,7 +66,7 @@ export interface JsMindOptions {
      * 线条颜色
      * @default #555
      */
-    line_color?: React.CSSProperties
+    line_color?: React.CSSProperties['color']
   }
   /**
    * 布局配置
@@ -136,15 +136,24 @@ export interface JsMindOptions {
 }
 // jsmind实例
 export interface JsMindInstance {
-  screenshot?: any
-  shoot?: () => void
+  // screenshot: {
+  //   shoot: () => void;
+  //   download: () => void;
+  // };
+  screenshot: any
+  shoot: () => void
   show: (data: JsMindData | undefined) => void
   enable_edit: () => void
   disable_edit: () => void
   get_node: (nodeId: string) => JsMindDataType
-  get_data: () => JsMindDataType
-  set_node_font_style: (nodeid: string, size: React.CSSProperties, weight: React.CSSProperties, style: React.CSSProperties) => void
-  set_node_color: (node_id: string, bg_color: React.CSSProperties, fg_color: React.CSSProperties) => void
+  get_data: (format?: 'node_tree' | 'node_array' | 'freemind') => JsMindDataType
+  set_node_font_style: (
+    nodeid: string,
+    size: React.CSSProperties['fontSize'],
+    weight: React.CSSProperties['fontWeight'],
+    style: React.CSSProperties['fontStyle']
+  ) => void
+  set_node_color: (node_id: string, bg_color: React.CSSProperties['color'], fg_color: React.CSSProperties['color']) => void
   add_node: (
     parent_node: Omit<JsMindDataType, 'undefined'>,
     node_id: string,
@@ -155,14 +164,21 @@ export interface JsMindInstance {
   get_selected_node: () => JsMindDataType | null
   expand_all: () => void
   remove_node: (node: Omit<JsMindDataType, 'undefined'>) => boolean
+  update_node: (node_id: string | number, topic: string) => void
+  scroll_node_to_center: (node) => void
 }
 // 定义ref的接口
 export interface JsMindRefValue {
   getInstance: () => JsMindInstance | null
   screenShot: () => void
   getData: () => JsMindDataType
-  setNodeFontStyle: (nodeid: string, size: React.CSSProperties, weight: React.CSSProperties, style: React.CSSProperties) => void
-  setNodeColor: (node_id: string, bg_color: React.CSSProperties, fg_color: React.CSSProperties) => void
+  setNodeFontStyle: (
+    nodeid: string,
+    size: React.CSSProperties['fontSize'],
+    weight: React.CSSProperties['fontWeight'],
+    style: React.CSSProperties['fontStyle']
+  ) => void
+  setNodeColor: (node_id: string, bg_color: React.CSSProperties['color'], fg_color: React.CSSProperties['color']) => void
   addNode: (
     parent_node: Omit<JsMindDataType, 'undefined'>,
     node_id: string,
@@ -217,10 +233,6 @@ export interface TreeNode {
    * 节点背景色
    */
   'background-color'?: React.CSSProperties
-  /**
-   * 节点前景色
-   */
-  'foreground-color'?: React.CSSProperties
 }
 
 export interface ArrayTreeNode extends Omit<TreeNode, 'children'> {

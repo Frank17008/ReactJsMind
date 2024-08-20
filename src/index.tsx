@@ -5,7 +5,7 @@
 import jsMind from 'jsmind';
 import 'jsmind/draggable-node';
 import 'jsmind/style/jsmind.css';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState, memo } from 'react';
 import './index.scss';
 import { JsMindDataType, JsMindInstance, JsMindProps, JsMindRefValue } from './interface';
 import './screenshot';
@@ -64,6 +64,7 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
 
   const jsMindRef = useRef<JsMindInstance | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const eventRef = useRef<Record<string, (e: Event) => void>>({});
   const [isReady, setIsReady] = useState<boolean>(false);
 
   const { data, options = {} } = props;
@@ -72,12 +73,14 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     return {
       getInstance: () => jsMindRef.current,
       screenShot: () => jsMindRef?.current?.screenshot?.shoot(),
-      getData: (): JsMindDataType => jsMindRef?.current?.get_data(),
+      getData: (format?): JsMindDataType => jsMindRef?.current?.get_data(format),
       getSelectedNode: (): JsMindDataType | null => jsMindRef?.current?.get_selected_node(),
       expandAll: () => jsMindRef?.current?.expand_all(),
       addNode: (parent_node, node_id, topic, data, direction): JsMindDataType | null =>
         jsMindRef?.current?.add_node(parent_node, node_id, topic, data, direction),
       removeNode: (node): boolean => !!jsMindRef?.current?.remove_node(node),
+      updateNode: (nodeId, topic): void => jsMindRef?.current?.update_node(nodeId, topic),
+      scrollNodeToCenter: (node) => jsMindRef?.current?.scroll_node_to_center(node),
       setNodeColor: (nodeId, bg_color, fg_color) => jsMindRef?.current?.set_node_color(nodeId, bg_color, fg_color),
       setNodeFontStyle: (nodeId, size, weight, style) => jsMindRef?.current?.set_node_font_style(nodeId, size, weight, style)
     };
@@ -93,7 +96,16 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
       props?.[eventType]?.(node);
     }
   }, []);
-  const createEventHandler = useCallback((eventType: string) => (e: Event) => handleEvent(e, eventType), [handleEvent]);
+
+  /**
+   * 创建事件处理函数, 缓存函数地址
+   */
+  const createEventHandler = useCallback((eventType: string) => {
+    if (!eventRef.current[eventType]) {
+      eventRef.current[eventType] = (e: Event) => handleEvent(e, eventType);
+    }
+    return eventRef.current[eventType];
+  }, [handleEvent]);
 
   const registerEvents = () => {
     const container = containerRef.current;
@@ -109,7 +121,7 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     if (container) {
       EVENT_TYPE.forEach((type: string) => {
         const nativeEventType = type.replace(/^on/, '').toLocaleLowerCase();
-        container.removeEventListener(nativeEventType, createEventHandler(type));
+        container.removeEventListener(nativeEventType, eventRef.current[type]);
       });
     }
   };
@@ -126,6 +138,7 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     }
   }, [data, isReady]);
 
+
   useEffect(() => {
     const __options = { ...defaultOptions, ...options };
     jsMindRef.current = new jsMind(__options);
@@ -138,4 +151,4 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
   return <div ref={containerRef} id="jsmind_container" style={{ width: '100%', height: '100%' }}></div>;
 });
 
-export default React.memo(ReactJsMind);
+export default memo(ReactJsMind);
