@@ -6,8 +6,8 @@ import jsMind from 'jsmind';
 import 'jsmind/draggable-node';
 import 'jsmind/style/jsmind.css';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState, memo } from 'react';
-import './index.scss';
 import { JsMindDataType, JsMindInstance, JsMindProps, JsMindRefValue } from './interface';
+import './index.less';
 import './screenshot';
 
 const defaultOptions = {
