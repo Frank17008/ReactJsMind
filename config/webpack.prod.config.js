@@ -39,11 +39,14 @@ const prodConfig = {
       new CssMinimizerPlugin(),
       new TerserPlugin({
         parallel: true,
-        extractComments: 'all',
+        extractComments: false,
         terserOptions: {
           compress: {
             drop_console: true,
             drop_debugger: true,
+          },
+          format: {
+            comments: false,
           },
         },
       }),
