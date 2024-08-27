@@ -67,7 +67,7 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
   const eventRef = useRef<Record<string, (e: Event) => void>>({});
   const [isReady, setIsReady] = useState<boolean>(false);
 
-  const { data, options = {} } = props;
+  const { data, options = {}, ...eventHandlers } = props;
 
   useImperativeHandle(ref, () => {
     return {
@@ -90,7 +90,7 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     e?.preventDefault();
     const target = e.target as HTMLElement;
     const nodeId = target.getAttribute('nodeid');
-    if (nodeId) {
+    if (nodeId && target.tagName === "JMNODE") {
       // 获取节点
       const node = jsMindRef.current?.get_node(nodeId);
       props?.[eventType]?.(node);
@@ -112,7 +112,9 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     if (container) {
       EVENT_TYPE.forEach((type: string) => {
         const nativeEventType = type.replace(/^on/, '').toLocaleLowerCase();
-        container.addEventListener(nativeEventType, createEventHandler(type));
+        if (Reflect.has(eventHandlers, type)) {
+          container.addEventListener(nativeEventType, createEventHandler(type));
+        }
       });
     }
   };
