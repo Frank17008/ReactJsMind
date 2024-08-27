@@ -1,6 +1,6 @@
 {
   "name": "react-jsmind",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "一个基于jsMind的react思维导图组件",
   "main": "dist/index.js",
   "exports": {
