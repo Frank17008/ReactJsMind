@@ -23,7 +23,7 @@ import ReactJsMind from 'react-jsmind'
 import 'react-jsmind/dist/index.min.css'
 
 const App = () => {
-  const mindRef: any = useState(null)
+  const mindRef: any = useRef(null)
   const [editable, setEditable] = useState(true)
   const getData = () => {
     if (mindRef.current) {
