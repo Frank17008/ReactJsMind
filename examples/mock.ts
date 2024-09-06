@@ -26,7 +26,7 @@ export const NodeArrayData = {
     },
     { id: 'sub3', parentid: 'root', topic: 'sub3' },
   ],
-}
+};
 
 export const NodeTreeData = {
   meta: { name: 'mind图', author: 'Your Name', version: '0.8.5' },
@@ -49,4 +49,42 @@ export const NodeTreeData = {
       },
     ],
   },
+};
+
+export interface NodeTreeDataType {
+  meta: { name?: string; author?: string; version?: string };
+  format?: string;
+  data: {
+    id?: string;
+    topic?: string;
+    direction?: string;
+    expanded?: boolean;
+    'background-color'?: string;
+    children: Array<{
+      id?: string;
+      topic?: string;
+      direction?: string;
+      expanded?: boolean;
+      'background-color'?: string;
+      children: Array<{ id?: string; topic?: string }>;
+      data: { width?: number; type?: string }; // 自定义业务数据
+    }>;
+  };
+}
+
+export interface NodeArrayDataType {
+  meta: {
+    name: string;
+    author: string;
+    version: string;
+  };
+  format: string;
+  data: Array<{
+    id: string;
+    isroot?: boolean; // 这个属性不是所有的节点都有，所以标记为可选
+    parentid?: string; // 父节点ID，根节点可能没有这个属性
+    topic: string;
+    'background-color'?: string; // 背景颜色，不是所有节点都有
+    'foreground-color'?: string; // 前景颜色，不是所有节点都有
+  }>;
 }
