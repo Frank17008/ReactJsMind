@@ -1,3 +1,4 @@
+import React from 'react'
 export type JsMindDataType = TreeNode | ArrayTreeNode | string | undefined
 
 export interface JsMindProps {

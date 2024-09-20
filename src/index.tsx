@@ -90,10 +90,12 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
     e?.preventDefault();
     const target = e.target as HTMLElement;
     const nodeId = target.getAttribute('nodeid');
-    if (nodeId && target.tagName === "JMNODE") {
-      // 获取节点
-      const node = jsMindRef.current?.get_node(nodeId);
-      props?.[eventType]?.(node);
+    const node = nodeId && jsMindRef.current?.get_node(nodeId);
+    if (node) {
+      const isNode = target.tagName === "JMNODE";
+      const isExpandNode = target.tagName === "JMEXPANDER";
+      const eventName = isNode ? eventType : isExpandNode ? "onExpand" : ""
+      eventName && props?.[eventName]?.(node);
     }
   }, []);
 
@@ -139,7 +141,6 @@ const ReactJsMind = forwardRef<JsMindRefValue, JsMindProps>((props: JsMindProps,
       jsMindRef?.current?.show(data);
     }
   }, [data, isReady]);
-
 
   useEffect(() => {
     const __options = { ...defaultOptions, ...options };
