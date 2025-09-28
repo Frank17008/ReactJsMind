@@ -1,11 +1,15 @@
 {
   "name": "@frank17008/react-jsmind",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "一个基于jsMind的react思维导图组件",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js",
     "./dist/index.min.css": "./dist/index.min.css"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://github.com/Frank17008/ReactJsMind"
   },
   "scripts": {
     "dev": "webpack-dev-server --config config/webpack.dev.config.js",
