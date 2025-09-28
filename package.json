@@ -1,6 +1,6 @@
 {
   "name": "@frank17008/react-jsmind",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "一个基于jsMind的react思维导图组件",
   "main": "dist/index.js",
   "exports": {
