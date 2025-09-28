@@ -7,9 +7,10 @@
     ".": "./dist/index.js",
     "./dist/index.min.css": "./dist/index.min.css"
   },
+  "homepage": "https://github.com/Frank17008/ReactJsMind",
   "publishConfig": {
     "access": "public",
-    "registry": "https://github.com/Frank17008/ReactJsMind"
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "dev": "webpack-dev-server --config config/webpack.dev.config.js",
