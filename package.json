@@ -1,7 +1,8 @@
 {
   "name": "react-jsmind",
-  "version": "1.0.6",
-  "description": "一个基于jsMind的react思维导图组件",
+  "version": "1.0.7",
+  "description": "一个基于jsMind的react思维导图组件 (已弃用，请使用@frank17008/react-jsmind)",
+  "deprecated": "WARNING: This project has been migrated to @frank17008/react-jsmind. Please switch to the new package as this one will no longer be maintained.",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js",

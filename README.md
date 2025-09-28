@@ -1,3 +1,19 @@
+# react-jsmind (已弃用)
+
+⚠️ **此包已被弃用** ⚠️
+
+该项目已迁移到新的作用域包: [@frank17008/react-jsmind](https://www.npmjs.com/package/@frank17008/react-jsmind)
+
+请使用以下命令安装新包:
+
+```
+npm install @frank17008/react-jsmind
+```
+
+此仓库将不再维护，请尽快迁移到新包。
+
+---
+
 # jsMind React 版
 
 ![reactjsmind](https://img.shields.io/badge/ReactJSMind-JsMind?style=flat&logo=webcomponentsdotorg&color=%23333) ![node](<https://img.shields.io/badge/node-v16.20.0-brightgreen?style=flat&logo=nodedotjs&color=rgb(0%2C126%2C198)>) ![size](<https://img.shields.io/badge/packed%20size-27.9%20KB-brightgreen?style=flat&color=rgb(0%2C126%2C198)>) ![webpack](https://img.shields.io/badge/webpack-v5.93-brightgreen?style=plastic&logo=webpack) ![jsMind](https://img.shields.io/badge/jsMind-0.8.5%2B-brightgreen?style=plastic&logo=npm)
@@ -19,56 +35,61 @@ yarn add react-jsmind
 ![react-jsmind-demo](demo.gif)
 
 ```tsx
-import ReactJsMind from 'react-jsmind'
-import 'react-jsmind/dist/index.min.css'
+import ReactJsMind from "react-jsmind";
+import "react-jsmind/dist/index.min.css";
 
 const App = () => {
-  const mindRef: any = useRef(null)
-  const [editable, setEditable] = useState(true)
+  const mindRef: any = useRef(null);
+  const [editable, setEditable] = useState(true);
   const getData = () => {
     if (mindRef.current) {
-      const data = mindRef.current.getData()
-      alert(JSON.stringify(data))
+      const data = mindRef.current.getData();
+      alert(JSON.stringify(data));
     }
-  }
+  };
   const NodeTreeData = {
-    meta: { name: 'mind图', author: 'Your Name', version: '0.8.5' },
-    format: 'node_tree',
+    meta: { name: "mind图", author: "Your Name", version: "0.8.5" },
+    format: "node_tree",
     data: {
-      id: 'root',
-      topic: '😊根节点',
+      id: "root",
+      topic: "😊根节点",
       children: [
         {
-          id: '1',
-          topic: '子节点1',
-          direction: 'left',
+          id: "1",
+          topic: "子节点1",
+          direction: "left",
           expanded: true,
-          'background-color': '#03BF8A',
+          "background-color": "#03BF8A",
           children: [
-            { id: '2', topic: '子节点2' },
-            { id: '3', topic: '子节点3' },
+            { id: "2", topic: "子节点2" },
+            { id: "3", topic: "子节点3" },
           ],
-          data: { width: 100, type: 'rect' }, // 自定义业务数据
+          data: { width: 100, type: "rect" }, // 自定义业务数据
         },
       ],
     },
-  }
+  };
   const enableEdit = () => {
-    setEditable(!editable)
-  }
+    setEditable(!editable);
+  };
   const onNodeClick = (node) => {
-    console.log('点击的节点', node)
-  }
+    console.log("点击的节点", node);
+  };
   return (
-    <div style={{ width: '100%', height: 800 }}>
-      <div className='btns'>
+    <div style={{ width: "100%", height: 800 }}>
+      <div className="btns">
         <button onClick={getData}>获取数据</button>
-        <button onClick={enableEdit}>{editable ? '关闭' : '开启'}编辑</button>
+        <button onClick={enableEdit}>{editable ? "关闭" : "开启"}编辑</button>
       </div>
-      <ReactJsMind ref={mindRef} options={{ editable }} data={NodeTreeData} onClick={onNodeClick} />
+      <ReactJsMind
+        ref={mindRef}
+        options={{ editable }}
+        data={NodeTreeData}
+        onClick={onNodeClick}
+      />
     </div>
-  )
-}
+  );
+};
 ```
 
 3.  特性说明
