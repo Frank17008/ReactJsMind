@@ -1,5 +1,5 @@
 {
-  "name": "react-jsmind",
+  "name": "@frank17008/react-jsmind",
   "version": "1.0.6",
   "description": "一个基于jsMind的react思维导图组件",
   "main": "dist/index.js",

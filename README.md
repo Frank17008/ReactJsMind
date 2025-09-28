@@ -7,11 +7,11 @@
 1. 安装
 
 ```
-npm install react-jsmind
+npm install @frank17008/react-jsmind
 
 // # or
 
-yarn add react-jsmind
+yarn add @frank17008/react-jsmind
 ```
 
 2. 基本使用
@@ -19,8 +19,8 @@ yarn add react-jsmind
 ![react-jsmind-demo](demo.gif)
 
 ```tsx
-import ReactJsMind from 'react-jsmind'
-import 'react-jsmind/dist/index.min.css'
+import ReactJsMind from '@frank17008/react-jsmind'
+import '@frank17008/react-jsmind/dist/index.min.css'
 
 const App = () => {
   const mindRef: any = useRef(null)

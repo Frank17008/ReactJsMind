@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { NodeArrayData, NodeTreeData } from './mock'
 // import ReactJsMind from '../dist/index'
-import ReactJsMind from 'react-jsmind'
-import 'react-jsmind/dist/index.min.css'
+import ReactJsMind from '@frank17008/react-jsmind'
+import '@frank17008/react-jsmind/dist/index.min.css'
 import './index.less'
 
 const App = () => {

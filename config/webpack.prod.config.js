@@ -13,10 +13,10 @@ const prodConfig = {
     filename: 'index.js',
     clean: true,
     // library: {
-    //   name: "react-jsmind"
+    //   name: "@frank17008/react-jsmind"
     //   type: 'umd',
     // },
-    library: 'react-jsmind',
+    library: '@frank17008/react-jsmind',
     libraryTarget: 'umd',
     libraryExport: 'default',
   },
