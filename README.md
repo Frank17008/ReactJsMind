@@ -16,7 +16,7 @@ yarn add @frank17008/react-jsmind
 
 2. 基本使用
 
-![react-jsmind-demo](demo.gif)
+在线演示: https://kaisa911.github.io/react-jsmind/
 
 ```tsx
 import ReactJsMind from '@frank17008/react-jsmind'
