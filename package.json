@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "webpack-dev-server --config config/webpack.dev.config.js",
     "build": "webpack --config config/webpack.prod.config.js",
-    "demo:build": "webpack --config config/webpack.demo.config.js",
+    "demo:build": "mkdir -p dist-demo && cp examples/index.html dist-demo/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

@@ -8,6 +8,11 @@
   <meta name="keywords" content="react, jsmind, mindmap, 思维导图, 组件库" />
   <meta name="author" content="Frank Dong" />
   <title>ReactJsMind - 思维导图组件演示</title>
+  
+  <!-- CSS from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/jsmind@0.8.5/style/jsmind.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@frank17008/react-jsmind@latest/dist/index.min.css" />
+  
   <style>
     * {
       margin: 0;
@@ -252,6 +257,18 @@
       }
     }
   </style>
+  
+  <!-- Import map for ESM -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@17",
+      "react-dom": "https://esm.sh/react-dom@17",
+      "react-dom/client": "https://esm.sh/react-dom@17/client",
+      "@frank17008/react-jsmind": "https://esm.sh/@frank17008/react-jsmind@latest"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -269,6 +286,9 @@
       <div class="mindmap-area">
         <div class="toolbar">
           <div class="btns">
+            <button id="btn-get-data">获取数据</button>
+            <button id="btn-toggle-data">更换数据</button>
+            <button id="btn-toggle-edit">开启/关闭编辑</button>
             <button onclick="alert('请查看侧边栏功能说明')">使用指南</button>
           </div>
         </div>
@@ -361,6 +381,116 @@
     });
   </script>
   
-  <script src="bundle.js"></script>
+  <!-- React application as ES module -->
+  <script type="module">
+    import React, { useState, useRef } from 'react';
+    import { createRoot } from 'react-dom/client';
+    import ReactJsMind from '@frank17008/react-jsmind';
+    
+    // Mock data - inlined from examples/mock.ts
+    const NodeArrayData = {
+      meta: {
+        name: "demo",
+        author: "demo",
+        version: "0.22",
+      },
+      format: "node_array",
+      data: [
+        { id: "root", isroot: true, topic: "react-jsMind" },
+        {
+          id: "sub1",
+          parentid: "root",
+          topic: "sub1",
+          "background-color": "#0000ff",
+        },
+        { id: "sub11", parentid: "sub1", topic: "sub11" },
+        { id: "sub12", parentid: "sub1", topic: "sub12" },
+        { id: "sub13", parentid: "sub1", topic: "sub13" },
+        { id: "sub2", parentid: "root", topic: "sub2" },
+        { id: "sub21", parentid: "sub2", topic: "sub21" },
+        {
+          id: "sub22",
+          parentid: "sub2",
+          topic: "sub22",
+          "foreground-color": "#33ff33",
+        },
+        { id: "sub3", parentid: "root", topic: "sub3" },
+      ],
+    };
+    
+    const NodeTreeData = {
+      meta: { name: "mind图", author: "Your Name", version: "0.8.5" },
+      format: "node_tree",
+      data: {
+        id: "root",
+        topic: "😊根节点",
+        children: [
+          {
+            id: "1",
+            topic: "子节点1",
+            direction: "left",
+            expanded: true,
+            "background-color": "#03BF8A",
+            children: [
+              { id: "2", topic: "子节点2" },
+              { id: "3", topic: "子节点3" },
+            ],
+            data: { width: 100, type: "rect" },
+          },
+        ],
+      },
+    };
+    
+    function App() {
+      const mindRef = useRef(null);
+      const [editable, setEditable] = useState(true);
+      const [useTreeData, setUseTreeData] = useState(true);
+      
+      const data = useTreeData ? NodeTreeData : NodeArrayData;
+      
+      const handleGetData = () => {
+        if (mindRef.current) {
+          const mindData = mindRef.current.getData();
+          alert(JSON.stringify(mindData, null, 2));
+        }
+      };
+      
+      const handleToggleData = () => {
+        setUseTreeData(!useTreeData);
+      };
+      
+      const handleToggleEdit = () => {
+        setEditable(!editable);
+      };
+      
+      const handleNodeClick = (node) => {
+        console.log('点击的节点', node);
+      };
+      
+      // Attach button handlers
+      React.useEffect(() => {
+        document.getElementById('btn-get-data').addEventListener('click', handleGetData);
+        document.getElementById('btn-toggle-data').addEventListener('click', handleToggleData);
+        document.getElementById('btn-toggle-edit').addEventListener('click', handleToggleEdit);
+        
+        return () => {
+          document.getElementById('btn-get-data').removeEventListener('click', handleGetData);
+          document.getElementById('btn-toggle-data').removeEventListener('click', handleToggleData);
+          document.getElementById('btn-toggle-edit').removeEventListener('click', handleToggleEdit);
+        };
+      }, [editable, useTreeData]);
+      
+      return React.createElement(ReactJsMind, {
+        ref: mindRef,
+        options: { editable },
+        data: data,
+        onClick: handleNodeClick
+      });
+    }
+    
+    // Mount React app
+    const root = createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
 </body>
 </html>
