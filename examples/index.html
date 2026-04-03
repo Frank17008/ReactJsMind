@@ -1,496 +1,779 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="ReactJsMind - 基于 jsMind 的 React 思维导图组件演示" />
-  <meta name="keywords" content="react, jsmind, mindmap, 思维导图, 组件库" />
-  <meta name="author" content="Frank Dong" />
-  <title>ReactJsMind - 思维导图组件演示</title>
-  
-  <!-- CSS from CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/jsmind@0.8.5/style/jsmind.css" />
-  <link rel="stylesheet" href="https://unpkg.com/@frank17008/react-jsmind@latest/dist/index.min.css" />
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #f5f7fa;
-      color: #333;
-      line-height: 1.6;
-    }
-    
-    .app-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    
-    .header {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      color: white;
-      padding: 16px 24px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-    }
-    
-    .header h1 {
-      font-size: 20px;
-      font-weight: 600;
-    }
-    
-    .header-links {
-      display: flex;
-      gap: 20px;
-    }
-    
-    .header-links a {
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      opacity: 0.9;
-      transition: opacity 0.2s;
-    }
-    
-    .header-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-    
-    .main-area {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-    
-    .mindmap-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 16px;
-      overflow: hidden;
-    }
-    
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-shrink: 0;
-    }
-    
-    .btns {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    
-    .btns button {
-      height: 36px;
-      line-height: 36px;
-      padding: 0 16px;
-      text-align: center;
-      cursor: pointer;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      background-color: #2387f9;
-      font-size: 14px;
-      transition: background-color 0.2s;
-    }
-    
-    .btns button:hover {
-      background-color: #1a6fd8;
-    }
-    
-    #root {
-      flex: 1;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-    
-    .sidebar {
-      width: 320px;
-      background: white;
-      border-left: 1px solid #e5e7eb;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
-    
-    .sidebar-tabs {
-      display: flex;
-      border-bottom: 1px solid #e5e7eb;
-      flex-shrink: 0;
-    }
-    
-    .sidebar-tab {
-      flex: 1;
-      padding: 12px 8px;
-      text-align: center;
-      font-size: 13px;
-      color: #666;
-      cursor: pointer;
-      border: none;
-      background: none;
-      transition: all 0.2s;
-      border-bottom: 2px solid transparent;
-    }
-    
-    .sidebar-tab:hover {
-      color: #6366f1;
-      background: #f9fafb;
-    }
-    
-    .sidebar-tab.active {
-      color: #6366f1;
-      border-bottom-color: #6366f1;
-      font-weight: 500;
-    }
-    
-    .sidebar-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-    }
-    
-    .tab-panel {
-      display: none;
-    }
-    
-    .tab-panel.active {
-      display: block;
-    }
-    
-    .tab-panel ul {
-      list-style: none;
-      padding: 0;
-    }
-    
-    .tab-panel li {
-      padding: 10px 0;
-      font-size: 13px;
-      border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .tab-panel li:last-child {
-      border-bottom: none;
-    }
-    
-    .tab-panel strong {
-      color: #374151;
-    }
-    
-    .tab-panel kbd {
-      background: #f3f4f6;
-      border: 1px solid #d1d5db;
-      border-radius: 3px;
-      padding: 2px 6px;
-      font-size: 11px;
-      font-family: monospace;
-    }
-    
-    .tab-panel a {
-      color: #6366f1;
-      text-decoration: none;
-    }
-    
-    .tab-panel a:hover {
-      text-decoration: underline;
-    }
-    
-    .footer {
-      padding: 12px 24px;
-      text-align: center;
-      color: #666;
-      font-size: 13px;
-      background: white;
-      border-top: 1px solid #e5e7eb;
-      flex-shrink: 0;
-    }
-    
-    .footer a {
-      color: #6366f1;
-      text-decoration: none;
-    }
-    
-    .footer a:hover {
-      text-decoration: underline;
-    }
-    
-    @media (max-width: 768px) {
-      .main-area {
-        flex-direction: column;
-      }
-      
-      .sidebar {
-        width: 100%;
-        height: 300px;
-        border-left: none;
-        border-top: 1px solid #e5e7eb;
-      }
-      
-      .header {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-      }
-      
-      .header-links {
-        gap: 16px;
-      }
-    }
-  </style>
-  
-  <!-- Import map for ESM -->
-  <script type="importmap">
-  {
-    "imports": {
-      "react": "https://esm.sh/react@17",
-      "react-dom": "https://esm.sh/react-dom@17",
-      "react-dom/client": "https://esm.sh/react-dom@17/client",
-      "@frank17008/react-jsmind": "https://esm.sh/@frank17008/react-jsmind@latest"
-    }
-  }
-  </script>
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ReactJsMind - 基于 jsMind 的 React 思维导图组件演示"
+    />
+    <meta name="keywords" content="react, jsmind, mindmap, 思维导图, 组件库" />
+    <meta name="author" content="Frank Dong" />
+    <title>ReactJsMind - 思维导图组件演示</title>
 
-<body>
-  <div class="app-container">
-    <div class="header">
-      <h1>ReactJsMind 思维导图组件</h1>
-      <div class="header-links">
-        <a href="https://github.com/Frank17008/ReactJsMind" target="_blank">GitHub</a>
-        <a href="https://www.npmjs.com/package/@frank17008/react-jsmind" target="_blank">npm</a>
-        <a href="https://github.com/hizzgdev/jsmind" target="_blank">jsMind</a>
-      </div>
-    </div>
-    
-    <div class="main-area">
-      <div class="mindmap-area">
-        <div class="toolbar">
-          <div class="btns">
-            <button id="btn-get-data">获取数据</button>
-            <button id="btn-toggle-data">更换数据</button>
-            <button id="btn-toggle-edit">开启/关闭编辑</button>
-            <button onclick="alert('请查看侧边栏功能说明')">使用指南</button>
-          </div>
-        </div>
-        <div id="root"></div>
-      </div>
-      
-      <div class="sidebar">
-        <div class="sidebar-tabs">
-          <button class="sidebar-tab active" data-tab="interaction">交互</button>
-          <button class="sidebar-tab" data-tab="shortcuts">快捷键</button>
-          <button class="sidebar-tab" data-tab="features">功能</button>
-          <button class="sidebar-tab" data-tab="links">链接</button>
-        </div>
-        
-        <div class="sidebar-content">
-          <div class="tab-panel active" id="interaction">
-            <ul>
-              <li><strong>点击节点</strong> - 选中节点，查看节点信息</li>
-              <li><strong>双击节点</strong> - 编辑节点内容</li>
-              <li><strong>拖拽节点</strong> - 移动节点位置（编辑模式下）</li>
-              <li><strong>展开/收起</strong> - 点击节点旁的 + / - 符号</li>
-              <li><strong>鼠标悬停</strong> - 高亮显示当前节点</li>
-              <li><strong>右键菜单</strong> - 显示节点操作菜单</li>
-              <li><strong>滚轮缩放</strong> - 放大或缩小思维导图</li>
-              <li><strong>拖拽画布</strong> - 移动视图区域</li>
-            </ul>
-          </div>
-          
-          <div class="tab-panel" id="shortcuts">
-            <ul>
-              <li><kbd>Insert</kbd> - 添加子节点</li>
-              <li><kbd>Enter</kbd> - 添加兄弟节点</li>
-              <li><kbd>F2</kbd> - 编辑当前节点</li>
-              <li><kbd>Delete</kbd> - 删除节点</li>
-              <li><kbd>Space</kbd> - 展开/收起节点</li>
-              <li><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> - 导航节点</li>
-              <li><kbd>Ctrl + A</kbd> - 全选节点</li>
-              <li><kbd>Ctrl + Z</kbd> - 撤销操作</li>
-            </ul>
-          </div>
-          
-          <div class="tab-panel" id="features">
-            <ul>
-              <li>支持树形和数组两种数据格式</li>
-              <li>支持节点拖拽和缩放</li>
-              <li>支持自定义节点样式</li>
-              <li>支持截图导出功能</li>
-              <li>支持主题切换</li>
-              <li>支持编辑模式切换</li>
-              <li>支持多种布局方向</li>
-              <li>支持节点折叠/展开</li>
-            </ul>
-          </div>
-          
-          <div class="tab-panel" id="links">
-            <ul>
-              <li><a href="https://github.com/Frank17008/ReactJsMind" target="_blank">GitHub 仓库</a></li>
-              <li><a href="https://github.com/hizzgdev/jsmind" target="_blank">jsMind 官方文档</a></li>
-              <li><a href="https://www.npmjs.com/package/@frank17008/react-jsmind" target="_blank">npm 包</a></li>
-              <li><a href="https://github.com/Frank17008/ReactJsMind/blob/master/README.md" target="_blank">使用文档</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="footer">
-      Powered by <a href="https://github.com/Frank17008/ReactJsMind">ReactJsMind</a> | 
-      Based on <a href="https://github.com/hizzgdev/jsmind">jsMind</a>
-    </div>
-  </div>
-  
-  <script>
-    // Tab switching logic
-    document.querySelectorAll('.sidebar-tab').forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        // Remove active class from all tabs and panels
-        document.querySelectorAll('.sidebar-tab').forEach(function(t) {
-          t.classList.remove('active');
-        });
-        document.querySelectorAll('.tab-panel').forEach(function(p) {
-          p.classList.remove('active');
-        });
-        
-        // Add active class to clicked tab and corresponding panel
-        this.classList.add('active');
-        var tabId = this.getAttribute('data-tab');
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-  </script>
-  
-  <!-- React application as ES module -->
-  <script type="module">
-    import React, { useState, useRef } from 'react';
-    import { createRoot } from 'react-dom/client';
-    import ReactJsMind from '@frank17008/react-jsmind';
-    
-    // Mock data - inlined from examples/mock.ts
-    const NodeArrayData = {
-      meta: {
-        name: "demo",
-        author: "demo",
-        version: "0.22",
-      },
-      format: "node_array",
-      data: [
-        { id: "root", isroot: true, topic: "react-jsMind" },
-        {
-          id: "sub1",
-          parentid: "root",
-          topic: "sub1",
-          "background-color": "#0000ff",
-        },
-        { id: "sub11", parentid: "sub1", topic: "sub11" },
-        { id: "sub12", parentid: "sub1", topic: "sub12" },
-        { id: "sub13", parentid: "sub1", topic: "sub13" },
-        { id: "sub2", parentid: "root", topic: "sub2" },
-        { id: "sub21", parentid: "sub2", topic: "sub21" },
-        {
-          id: "sub22",
-          parentid: "sub2",
-          topic: "sub22",
-          "foreground-color": "#33ff33",
-        },
-        { id: "sub3", parentid: "root", topic: "sub3" },
-      ],
-    };
-    
-    const NodeTreeData = {
-      meta: { name: "mind图", author: "Your Name", version: "0.8.5" },
-      format: "node_tree",
-      data: {
-        id: "root",
-        topic: "😊根节点",
-        children: [
-          {
-            id: "1",
-            topic: "子节点1",
-            direction: "left",
-            expanded: true,
-            "background-color": "#03BF8A",
-            children: [
-              { id: "2", topic: "子节点2" },
-              { id: "3", topic: "子节点3" },
-            ],
-            data: { width: 100, type: "rect" },
-          },
-        ],
-      },
-    };
-    
-    function App() {
-      const mindRef = useRef(null);
-      const [editable, setEditable] = useState(true);
-      const [useTreeData, setUseTreeData] = useState(true);
-      
-      const data = useTreeData ? NodeTreeData : NodeArrayData;
-      
-      const handleGetData = () => {
-        if (mindRef.current) {
-          const mindData = mindRef.current.getData();
-          alert(JSON.stringify(mindData, null, 2));
+    <!-- CSS from CDN -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/jsmind@0.8.5/style/jsmind.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@frank17008/react-jsmind@latest/dist/index.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        padding: 16px 24px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .header h1 {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .header-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .header-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        opacity: 0.9;
+        transition: opacity 0.2s;
+      }
+
+      .header-links a:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+
+      .main-area {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .mindmap-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        overflow: hidden;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-shrink: 0;
+      }
+
+      .btns {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btns button {
+        height: 36px;
+        line-height: 36px;
+        padding: 0 16px;
+        text-align: center;
+        cursor: pointer;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        background-color: #2387f9;
+        font-size: 14px;
+        transition: background-color 0.2s;
+      }
+
+      .btns button:hover {
+        background-color: #1a6fd8;
+      }
+
+      #root {
+        flex: 1;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+
+      .sidebar {
+        width: 320px;
+        background: white;
+        border-left: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+
+      .sidebar-tabs {
+        display: flex;
+        border-bottom: 1px solid #e5e7eb;
+        flex-shrink: 0;
+      }
+
+      .sidebar-tab {
+        flex: 1;
+        padding: 12px 8px;
+        text-align: center;
+        font-size: 13px;
+        color: #666;
+        cursor: pointer;
+        border: none;
+        background: none;
+        transition: all 0.2s;
+        border-bottom: 2px solid transparent;
+      }
+
+      .sidebar-tab:hover {
+        color: #6366f1;
+        background: #f9fafb;
+      }
+
+      .sidebar-tab.active {
+        color: #6366f1;
+        border-bottom-color: #6366f1;
+        font-weight: 500;
+      }
+
+      .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+
+      .tab-panel ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .tab-panel li {
+        padding: 10px 0;
+        font-size: 13px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .tab-panel li:last-child {
+        border-bottom: none;
+      }
+
+      .tab-panel strong {
+        color: #374151;
+      }
+
+      .tab-panel kbd {
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 3px;
+        padding: 2px 6px;
+        font-size: 11px;
+        font-family: monospace;
+      }
+
+      .tab-panel a {
+        color: #6366f1;
+        text-decoration: none;
+      }
+
+      .tab-panel a:hover {
+        text-decoration: underline;
+      }
+
+      /* Data Drawer - Left side absolute positioning */
+      .data-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .data-overlay.visible {
+        display: block;
+        opacity: 1;
+      }
+
+      .data-drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 520px;
+        max-width: 90vw;
+        background: #1e1e2e;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .data-drawer.visible {
+        transform: translateX(0);
+      }
+
+      .data-drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        background: #2a2a3d;
+        border-bottom: 1px solid #3a3a4d;
+        flex-shrink: 0;
+      }
+
+      .data-drawer-title {
+        color: #cdd6f4;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .data-drawer-title::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #89b4fa;
+        border-radius: 50%;
+      }
+
+      .data-drawer-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .data-drawer-btn {
+        padding: 6px 14px;
+        font-size: 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-weight: 500;
+      }
+
+      .data-drawer-btn.copy {
+        background: #89b4fa;
+        color: #1e1e2e;
+      }
+
+      .data-drawer-btn.copy:hover {
+        background: #74c7ec;
+      }
+
+      .data-drawer-btn.copy.copied {
+        background: #a6e3a1;
+      }
+
+      .data-drawer-btn.close {
+        background: #45475a;
+        color: #cdd6f4;
+      }
+
+      .data-drawer-btn.close:hover {
+        background: #585b70;
+      }
+
+      .data-drawer-content {
+        flex: 1;
+        overflow: auto;
+        padding: 16px 20px;
+        font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #cdd6f4;
+        tab-size: 2;
+      }
+
+      .data-drawer-content pre {
+        margin: 0;
+        white-space: pre;
+      }
+
+      /* Scrollbar styling */
+      .data-drawer-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .data-drawer-content::-webkit-scrollbar-track {
+        background: #1e1e2e;
+      }
+
+      .data-drawer-content::-webkit-scrollbar-thumb {
+        background: #45475a;
+        border-radius: 4px;
+      }
+
+      .data-drawer-content::-webkit-scrollbar-thumb:hover {
+        background: #585b70;
+      }
+
+      /* JSON Syntax Highlighting */
+      .json-key { color: #89b4fa; }
+      .json-string { color: #a6e3a1; }
+      .json-number { color: #fab387; }
+      .json-boolean { color: #cba6f7; }
+      .json-null { color: #6c7086; }
+      .json-bracket { color: #cdd6f4; }
+      .json-comma { color: #a6adc8; }
+
+      .footer {
+        padding: 12px 24px;
+        text-align: center;
+        color: #666;
+        font-size: 13px;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+        flex-shrink: 0;
+      }
+
+      .footer a {
+        color: #6366f1;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .main-area {
+          flex-direction: column;
         }
-      };
-      
-      const handleToggleData = () => {
-        setUseTreeData(!useTreeData);
-      };
-      
-      const handleToggleEdit = () => {
-        setEditable(!editable);
-      };
-      
-      const handleNodeClick = (node) => {
-        console.log('点击的节点', node);
-      };
-      
-      // Attach button handlers
-      React.useEffect(() => {
-        document.getElementById('btn-get-data').addEventListener('click', handleGetData);
-        document.getElementById('btn-toggle-data').addEventListener('click', handleToggleData);
-        document.getElementById('btn-toggle-edit').addEventListener('click', handleToggleEdit);
-        
-        return () => {
-          document.getElementById('btn-get-data').removeEventListener('click', handleGetData);
-          document.getElementById('btn-toggle-data').removeEventListener('click', handleToggleData);
-          document.getElementById('btn-toggle-edit').removeEventListener('click', handleToggleEdit);
-        };
-      }, [editable, useTreeData]);
-      
-      return React.createElement(ReactJsMind, {
-        ref: mindRef,
-        options: { editable },
-        data: data,
-        onClick: handleNodeClick
+
+        .sidebar {
+          width: 100%;
+          height: 300px;
+          border-left: none;
+          border-top: 1px solid #e5e7eb;
+        }
+
+        .header {
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
+        }
+
+        .header-links {
+          gap: 16px;
+        }
+
+        .data-drawer {
+          width: 100vw;
+          max-width: 100vw;
+        }
+      }
+    </style>
+
+    <!-- React from CDN (UMD) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+    <!-- Import map for ESM -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18",
+          "react-dom": "https://esm.sh/react-dom@18",
+          "react-dom/client": "https://esm.sh/react-dom@18/client",
+          "@frank17008/react-jsmind": "https://esm.sh/@frank17008/react-jsmind@latest?external=react,react-dom"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="app-container">
+      <div class="header">
+        <h1>ReactJsMind 思维导图组件</h1>
+        <div class="header-links">
+          <a href="https://github.com/Frank17008/ReactJsMind" target="_blank"
+            >GitHub</a
+          >
+          <a
+            href="https://www.npmjs.com/package/@frank17008/react-jsmind"
+            target="_blank"
+            >npm</a
+          >
+          <a href="https://github.com/hizzgdev/jsmind" target="_blank"
+            >jsMind</a
+          >
+        </div>
+      </div>
+
+      <div class="main-area">
+        <div class="mindmap-area">
+          <div class="toolbar">
+            <div class="btns">
+              <button id="btn-get-data">获取数据</button>
+              <button id="btn-toggle-data">更换数据</button>
+              <button id="btn-toggle-edit">关闭编辑</button>
+            </div>
+          </div>
+          <div id="root"></div>
+        </div>
+
+        <div class="sidebar">
+          <div class="sidebar-tabs">
+            <button class="sidebar-tab active" data-tab="interaction">
+              交互
+            </button>
+            <button class="sidebar-tab" data-tab="shortcuts">快捷键</button>
+            <button class="sidebar-tab" data-tab="features">功能</button>
+          </div>
+
+          <div class="sidebar-content">
+            <div class="tab-panel active" id="interaction">
+              <ul>
+                <li><strong>点击节点</strong> - 选中节点，查看节点信息</li>
+                <li><strong>双击节点</strong> - 编辑节点内容</li>
+                <li><strong>拖拽节点</strong> - 移动节点位置（编辑模式下）</li>
+                <li><strong>展开/收起</strong> - 点击节点旁的 + / - 符号</li>
+                <li><strong>鼠标悬停</strong> - 高亮显示当前节点</li>
+                <li><strong>Ctrl+ 滚轮缩放</strong> - 放大或缩小思维导图</li>
+                <li><strong>Space</strong> - 选中节点,Space空格键可以展开/收起节点</li>
+              </ul>
+            </div>
+
+            <div class="tab-panel" id="shortcuts">
+              <ul>
+                <li><kbd>Insert</kbd> - 添加子节点</li>
+                <li><kbd>Enter</kbd> - 添加兄弟节点</li>
+                <li><kbd>F2</kbd> - 编辑当前节点</li>
+                <li><kbd>Delete</kbd> - 删除节点</li>
+                <li><kbd>Space</kbd> - 展开/收起节点</li>
+                <li>
+                  <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> - 导航节点
+                </li>
+                <li><kbd>Ctrl + A</kbd> - 全选节点</li>
+                <li><kbd>Ctrl + Z</kbd> - 撤销操作</li>
+              </ul>
+            </div>
+
+            <div class="tab-panel" id="features">
+              <ul>
+                <li>支持树形和数组两种数据格式</li>
+                <li>支持节点拖拽和缩放</li>
+                <li>支持自定义节点样式</li>
+                <li>支持截图导出功能</li>
+                <li>支持主题切换</li>
+                <li>支持编辑模式切换</li>
+                <li>支持多种布局方向</li>
+                <li>支持节点折叠/展开</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Powered by
+        <a href="https://github.com/Frank17008/ReactJsMind">ReactJsMind</a> |
+        Based on <a href="https://github.com/hizzgdev/jsmind">jsMind</a>
+      </div>
+    </div>
+
+    <div class="data-overlay" id="data-overlay"></div>
+    <div class="data-drawer" id="data-drawer">
+      <div class="data-drawer-header">
+        <span class="data-drawer-title">思维导图数据 (JSON)</span>
+        <div class="data-drawer-actions">
+          <button class="data-drawer-btn copy" id="btn-copy-data">复制</button>
+          <button class="data-drawer-btn close" id="btn-close-data">关闭</button>
+        </div>
+      </div>
+      <div class="data-drawer-content" id="data-content"></div>
+    </div>
+
+    <script>
+      // Tab switching logic
+      document.querySelectorAll(".sidebar-tab").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          // Remove active class from all tabs and panels
+          document.querySelectorAll(".sidebar-tab").forEach(function (t) {
+            t.classList.remove("active");
+          });
+          document.querySelectorAll(".tab-panel").forEach(function (p) {
+            p.classList.remove("active");
+          });
+
+          // Add active class to clicked tab and corresponding panel
+          this.classList.add("active");
+          var tabId = this.getAttribute("data-tab");
+          document.getElementById(tabId).classList.add("active");
+        });
       });
-    }
-    
-    // Mount React app
-    const root = createRoot(document.getElementById('root'));
-    root.render(React.createElement(App));
-  </script>
-</body>
+    </script>
+
+    <!-- React application as ES module -->
+    <script type="module">
+      import React from "react";
+      import { createRoot } from "react-dom/client";
+      import ReactJsMind from "@frank17008/react-jsmind";
+
+      // Mock data - inlined from examples/mock.ts
+      const NodeArrayData = {
+        meta: {
+          name: "demo",
+          author: "demo",
+          version: "0.22",
+        },
+        format: "node_array",
+        data: [
+          { id: "root", isroot: true, topic: "react-jsMind" },
+          {
+            id: "sub1",
+            parentid: "root",
+            topic: "sub1",
+            "background-color": "#0000ff",
+          },
+          { id: "sub11", parentid: "sub1", topic: "sub11" },
+          { id: "sub12", parentid: "sub1", topic: "sub12" },
+          { id: "sub13", parentid: "sub1", topic: "sub13" },
+          { id: "sub2", parentid: "root", topic: "sub2" },
+          { id: "sub21", parentid: "sub2", topic: "sub21" },
+          {
+            id: "sub22",
+            parentid: "sub2",
+            topic: "sub22",
+            "foreground-color": "#33ff33",
+          },
+          { id: "sub3", parentid: "root", topic: "sub3" },
+        ],
+      };
+
+      const NodeTreeData = {
+        meta: { name: "mind图", author: "Your Name", version: "0.8.5" },
+        format: "node_tree",
+        data: {
+          id: "root",
+          topic: "😊根节点",
+          children: [
+            {
+              id: "1",
+              topic: "子节点1",
+              direction: "left",
+              expanded: true,
+              "background-color": "#03BF8A",
+              children: [
+                { id: "2", topic: "子节点2" },
+                { id: "3", topic: "子节点3" },
+              ],
+              data: { width: 100, type: "rect" },
+            },
+          ],
+        },
+      };
+
+      function App() {
+        const mindRef = React.useRef(null);
+        const [editable, setEditable] = React.useState(true);
+        const [useTreeData, setUseTreeData] = React.useState(true);
+        const [showData, setShowData] = React.useState(false);
+        const [jsonData, setJsonData] = React.useState(null);
+        const [copied, setCopied] = React.useState(false);
+
+        const data = useTreeData ? NodeTreeData : NodeArrayData;
+
+        // Syntax highlight JSON
+        const highlightJson = (json) => {
+          return json.replace(
+            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function (match) {
+              let cls = 'json-number';
+              if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                  cls = 'json-key';
+                  match = match.replace(/:$/, '') + '<span class="json-comma">:</span>';
+                } else {
+                  cls = 'json-string';
+                }
+              } else if (/true|false/.test(match)) {
+                cls = 'json-boolean';
+              } else if (/null/.test(match)) {
+                cls = 'json-null';
+              }
+              return '<span class="' + cls + '">' + match + '</span>';
+            }
+          );
+        };
+
+        const handleGetData = () => {
+          if (mindRef.current) {
+            const mindData = mindRef.current.getData();
+            setJsonData(mindData);
+            setShowData(true);
+            setCopied(false);
+
+            const jsonStr = JSON.stringify(mindData, null, 2);
+            const highlighted = highlightJson(jsonStr);
+            document.getElementById('data-content').innerHTML = '<pre>' + highlighted + '</pre>';
+          }
+        };
+
+        const handleCloseData = () => {
+          setShowData(false);
+          setJsonData(null);
+        };
+
+        const handleCopyData = () => {
+          if (jsonData) {
+            const jsonStr = JSON.stringify(jsonData, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            });
+          }
+        };
+
+        const handleToggleData = () => {
+          setUseTreeData(!useTreeData);
+        };
+
+        const handleToggleEdit = () => {
+          setEditable(!editable);
+        };
+
+        const handleNodeClick = (node) => {
+          console.log("点击的节点", node);
+        };
+
+        React.useEffect(() => {
+          const btnEdit = document.getElementById("btn-toggle-edit");
+          btnEdit.textContent = editable ? "关闭编辑" : "开启编辑";
+
+          document
+            .getElementById("btn-get-data")
+            .addEventListener("click", handleGetData);
+          document
+            .getElementById("btn-toggle-data")
+            .addEventListener("click", handleToggleData);
+          btnEdit.addEventListener("click", handleToggleEdit);
+          document
+            .getElementById("btn-close-data")
+            .addEventListener("click", handleCloseData);
+          document
+            .getElementById("btn-copy-data")
+            .addEventListener("click", handleCopyData);
+
+          return () => {
+            document
+              .getElementById("btn-get-data")
+              .removeEventListener("click", handleGetData);
+            document
+              .getElementById("btn-toggle-data")
+              .removeEventListener("click", handleToggleData);
+            btnEdit.removeEventListener("click", handleToggleEdit);
+            document
+              .getElementById("btn-close-data")
+              .removeEventListener("click", handleCloseData);
+            document
+              .getElementById("btn-copy-data")
+              .removeEventListener("click", handleCopyData);
+          };
+        }, [editable, useTreeData, jsonData]);
+
+        React.useEffect(() => {
+          const drawer = document.getElementById('data-drawer');
+          const overlay = document.getElementById('data-overlay');
+          if (drawer && overlay) {
+            if (showData) {
+              drawer.classList.add('visible');
+              overlay.classList.add('visible');
+            } else {
+              drawer.classList.remove('visible');
+              overlay.classList.remove('visible');
+            }
+          }
+        }, [showData]);
+
+        React.useEffect(() => {
+          const overlay = document.getElementById('data-overlay');
+          if (overlay) {
+            overlay.addEventListener('click', handleCloseData);
+            return () => overlay.removeEventListener('click', handleCloseData);
+          }
+        }, []);
+
+        // Update copy button state
+        React.useEffect(() => {
+          const copyBtn = document.getElementById('btn-copy-data');
+          if (copyBtn) {
+            if (copied) {
+              copyBtn.textContent = '已复制 ✓';
+              copyBtn.classList.add('copied');
+            } else {
+              copyBtn.textContent = '复制';
+              copyBtn.classList.remove('copied');
+            }
+          }
+        }, [copied]);
+
+        return React.createElement(ReactJsMind, {
+          ref: mindRef,
+          options: { editable },
+          data: data,
+          onClick: handleNodeClick,
+        });
+      }
+
+      // Mount React app
+      const root = createRoot(document.getElementById("root"));
+      root.render(React.createElement(App));
+    </script>
+  </body>
 </html>

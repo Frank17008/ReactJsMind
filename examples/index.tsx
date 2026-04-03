@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { NodeArrayData, NodeTreeData } from "./mock";
 import ReactJsMind from "../src/index";
 import "../src/index.less";
@@ -45,4 +45,4 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+createRoot(document.getElementById("root")!).render(<App />);

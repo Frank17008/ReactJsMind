@@ -31,6 +31,20 @@ const devConfig = {
     static: path.join(__dirname, '../examples'),
     compress: true, // 启用gzip压缩
     port: 8080,
+    setupMiddlewares: (middlewares, devServer) => {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined')
+      }
+
+      devServer.app.use((req, res, next) => {
+        if (req.url === '/') {
+          req.url = '/dev.html'
+        }
+        return next()
+      })
+
+      return middlewares
+    },
   },
 }
 
