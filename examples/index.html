@@ -283,7 +283,7 @@
       }
 
       .data-drawer-title::before {
-        content: '';
+        content: "";
         display: inline-block;
         width: 8px;
         height: 8px;
@@ -332,7 +332,8 @@
         flex: 1;
         overflow: auto;
         padding: 16px 20px;
-        font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+        font-family:
+          "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
         font-size: 12px;
         line-height: 1.6;
         color: #cdd6f4;
@@ -363,13 +364,27 @@
       }
 
       /* JSON Syntax Highlighting */
-      .json-key { color: #89b4fa; }
-      .json-string { color: #a6e3a1; }
-      .json-number { color: #fab387; }
-      .json-boolean { color: #cba6f7; }
-      .json-null { color: #6c7086; }
-      .json-bracket { color: #cdd6f4; }
-      .json-comma { color: #a6adc8; }
+      .json-key {
+        color: #89b4fa;
+      }
+      .json-string {
+        color: #a6e3a1;
+      }
+      .json-number {
+        color: #fab387;
+      }
+      .json-boolean {
+        color: #cba6f7;
+      }
+      .json-null {
+        color: #6c7086;
+      }
+      .json-bracket {
+        color: #cdd6f4;
+      }
+      .json-comma {
+        color: #a6adc8;
+      }
 
       .footer {
         padding: 12px 24px;
@@ -420,8 +435,14 @@
     </style>
 
     <!-- React from CDN (UMD) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+      crossorigin
+    ></script>
 
     <!-- Import map for ESM -->
     <script type="importmap">
@@ -462,6 +483,10 @@
               <button id="btn-get-data">获取数据</button>
               <button id="btn-toggle-data">更换数据</button>
               <button id="btn-toggle-edit">关闭编辑</button>
+              <button id="btn-screenshot">导出截图</button>
+              <button id="btn-expand-all">展开全部</button>
+              <button id="btn-toggle-theme">切换主题</button>
+              <div id="theme-text" style="line-height: 36px;height: 36px;">主题: primary</div>
             </div>
           </div>
           <div id="root"></div>
@@ -485,7 +510,9 @@
                 <li><strong>展开/收起</strong> - 点击节点旁的 + / - 符号</li>
                 <li><strong>鼠标悬停</strong> - 高亮显示当前节点</li>
                 <li><strong>Ctrl+ 滚轮缩放</strong> - 放大或缩小思维导图</li>
-                <li><strong>Space</strong> - 选中节点,Space空格键可以展开/收起节点</li>
+                <li>
+                  <strong>Space</strong> - 选中节点,Space空格键可以展开/收起节点
+                </li>
               </ul>
             </div>
 
@@ -533,7 +560,9 @@
         <span class="data-drawer-title">思维导图数据 (JSON)</span>
         <div class="data-drawer-actions">
           <button class="data-drawer-btn copy" id="btn-copy-data">复制</button>
-          <button class="data-drawer-btn close" id="btn-close-data">关闭</button>
+          <button class="data-drawer-btn close" id="btn-close-data">
+            关闭
+          </button>
         </div>
       </div>
       <div class="data-drawer-content" id="data-content"></div>
@@ -623,9 +652,30 @@
         const mindRef = React.useRef(null);
         const [editable, setEditable] = React.useState(true);
         const [useTreeData, setUseTreeData] = React.useState(true);
+        const [theme, setTheme] = React.useState("primary");
+        const [mindmapKey, setMindmapKey] = React.useState(0); // 用于强制重新渲染
         const [showData, setShowData] = React.useState(false);
         const [jsonData, setJsonData] = React.useState(null);
         const [copied, setCopied] = React.useState(false);
+
+        const themes = [
+          "primary",
+          "warning",
+          "danger",
+          "success",
+          "info",
+          "greensea",
+          "nephrite",
+          "belizehole",
+          "wisteria",
+          "asphalt",
+          "orange",
+          "pumpkin",
+          "pomegranate",
+          "clouds",
+          "asbestos",
+        ];
+        const currentThemeIndex = themes.indexOf(theme);
 
         const data = useTreeData ? NodeTreeData : NodeArrayData;
 
@@ -634,21 +684,23 @@
           return json.replace(
             /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
             function (match) {
-              let cls = 'json-number';
+              let cls = "json-number";
               if (/^"/.test(match)) {
                 if (/:$/.test(match)) {
-                  cls = 'json-key';
-                  match = match.replace(/:$/, '') + '<span class="json-comma">:</span>';
+                  cls = "json-key";
+                  match =
+                    match.replace(/:$/, "") +
+                    '<span class="json-comma">:</span>';
                 } else {
-                  cls = 'json-string';
+                  cls = "json-string";
                 }
               } else if (/true|false/.test(match)) {
-                cls = 'json-boolean';
+                cls = "json-boolean";
               } else if (/null/.test(match)) {
-                cls = 'json-null';
+                cls = "json-null";
               }
-              return '<span class="' + cls + '">' + match + '</span>';
-            }
+              return '<span class="' + cls + '">' + match + "</span>";
+            },
           );
         };
 
@@ -661,7 +713,8 @@
 
             const jsonStr = JSON.stringify(mindData, null, 2);
             const highlighted = highlightJson(jsonStr);
-            document.getElementById('data-content').innerHTML = '<pre>' + highlighted + '</pre>';
+            document.getElementById("data-content").innerHTML =
+              "<pre>" + highlighted + "</pre>";
           }
         };
 
@@ -688,13 +741,34 @@
           setEditable(!editable);
         };
 
+        const handleScreenshot = () => {
+          if (mindRef.current) {
+            mindRef.current.screenShot();
+          }
+        };
+
+        const handleExpandAll = () => {
+          if (mindRef.current) {
+            mindRef.current.expandAll();
+          }
+        };
+
+        const handleToggleTheme = () => {
+          const nextIndex = (currentThemeIndex + 1) % themes.length;
+          setTheme(themes[nextIndex]);
+          setMindmapKey(prev => prev + 1); // 强制重新渲染组件
+        };
+
         const handleNodeClick = (node) => {
           console.log("点击的节点", node);
         };
 
         React.useEffect(() => {
           const btnEdit = document.getElementById("btn-toggle-edit");
+          const btnTheme = document.getElementById("btn-toggle-theme");
+          const themeV = document.getElementById("theme-text");
           btnEdit.textContent = editable ? "关闭编辑" : "开启编辑";
+          themeV.textContent = `主题: ${theme}`;
 
           document
             .getElementById("btn-get-data")
@@ -703,6 +777,13 @@
             .getElementById("btn-toggle-data")
             .addEventListener("click", handleToggleData);
           btnEdit.addEventListener("click", handleToggleEdit);
+          document
+            .getElementById("btn-screenshot")
+            .addEventListener("click", handleScreenshot);
+          document
+            .getElementById("btn-expand-all")
+            .addEventListener("click", handleExpandAll);
+          btnTheme.addEventListener("click", handleToggleTheme);
           document
             .getElementById("btn-close-data")
             .addEventListener("click", handleCloseData);
@@ -719,53 +800,61 @@
               .removeEventListener("click", handleToggleData);
             btnEdit.removeEventListener("click", handleToggleEdit);
             document
+              .getElementById("btn-screenshot")
+              .removeEventListener("click", handleScreenshot);
+            document
+              .getElementById("btn-expand-all")
+              .removeEventListener("click", handleExpandAll);
+            btnTheme.removeEventListener("click", handleToggleTheme);
+            document
               .getElementById("btn-close-data")
               .removeEventListener("click", handleCloseData);
             document
               .getElementById("btn-copy-data")
               .removeEventListener("click", handleCopyData);
           };
-        }, [editable, useTreeData, jsonData]);
+        }, [editable, useTreeData, jsonData, theme, currentThemeIndex]);
 
         React.useEffect(() => {
-          const drawer = document.getElementById('data-drawer');
-          const overlay = document.getElementById('data-overlay');
+          const drawer = document.getElementById("data-drawer");
+          const overlay = document.getElementById("data-overlay");
           if (drawer && overlay) {
             if (showData) {
-              drawer.classList.add('visible');
-              overlay.classList.add('visible');
+              drawer.classList.add("visible");
+              overlay.classList.add("visible");
             } else {
-              drawer.classList.remove('visible');
-              overlay.classList.remove('visible');
+              drawer.classList.remove("visible");
+              overlay.classList.remove("visible");
             }
           }
         }, [showData]);
 
         React.useEffect(() => {
-          const overlay = document.getElementById('data-overlay');
+          const overlay = document.getElementById("data-overlay");
           if (overlay) {
-            overlay.addEventListener('click', handleCloseData);
-            return () => overlay.removeEventListener('click', handleCloseData);
+            overlay.addEventListener("click", handleCloseData);
+            return () => overlay.removeEventListener("click", handleCloseData);
           }
         }, []);
 
         // Update copy button state
         React.useEffect(() => {
-          const copyBtn = document.getElementById('btn-copy-data');
+          const copyBtn = document.getElementById("btn-copy-data");
           if (copyBtn) {
             if (copied) {
-              copyBtn.textContent = '已复制 ✓';
-              copyBtn.classList.add('copied');
+              copyBtn.textContent = "已复制 ✓";
+              copyBtn.classList.add("copied");
             } else {
-              copyBtn.textContent = '复制';
-              copyBtn.classList.remove('copied');
+              copyBtn.textContent = "复制";
+              copyBtn.classList.remove("copied");
             }
           }
         }, [copied]);
 
         return React.createElement(ReactJsMind, {
+          key: mindmapKey,
           ref: mindRef,
-          options: { editable },
+          options: { editable, theme },
           data: data,
           onClick: handleNodeClick,
         });
