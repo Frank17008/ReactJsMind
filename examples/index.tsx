@@ -1,16 +1,17 @@
 import React, { useState, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { NodeArrayData, NodeTreeData } from "./mock";
-import ReactJsMind from "../src/index";
-import "../src/index.less";
+import ReactJsMind from "@frank17008/react-jsmind";
+import type { JsMindData, JsMindRefValue } from "@frank17008/react-jsmind"
+import "@frank17008/react-jsmind/dist/esm/index.min.css";
 import "./index.less";
 
 const App = () => {
-  const mindRef: any = useRef(null);
-  const [data, setData] = useState(NodeTreeData);
+  const mindRef = useRef<JsMindRefValue | null>(null);
+  const [data, setData] = useState<JsMindData>(NodeTreeData);
   const [editable, setEditable] = useState(true);
   const getData = () => {
-    if (mindRef.current) {
+    if (mindRef.current) {      
       const data = mindRef.current.getData();
       alert(JSON.stringify(data));
     }

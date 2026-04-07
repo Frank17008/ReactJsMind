@@ -12,6 +12,7 @@ export interface JsMindProps {
   onKeyDown?: (node: JsMindDataType) => void
   onKeyUp?: (node: JsMindDataType) => void
   onContextMenu?: (node: JsMindDataType) => void
+  onExpand?: (node: JsMindDataType) => void
 }
 
 export interface JsMindOptions {
@@ -172,7 +173,7 @@ export interface JsMindInstance {
 export interface JsMindRefValue {
   getInstance: () => JsMindInstance | null
   screenShot: () => void
-  getData: () => JsMindDataType
+  getData: (format?: 'node_tree' | 'node_array' | 'freemind') => JsMindDataType
   setNodeFontStyle: (
     nodeid: string,
     size: React.CSSProperties['fontSize'],
@@ -190,6 +191,8 @@ export interface JsMindRefValue {
   getSelectedNode: () => JsMindDataType | null
   expandAll: () => void
   removeNode: (node: Omit<JsMindDataType, 'undefined'>) => boolean
+  updateNode: (nodeId: string | number, topic: string) => void
+  scrollNodeToCenter: (node: JsMindDataType) => void
 }
 
 export interface JsMindData {
@@ -233,7 +236,8 @@ export interface TreeNode {
   /**
    * 节点背景色
    */
-  'background-color'?: React.CSSProperties
+  'background-color'?: string
+  'foreground-color'?: string
 }
 
 export interface ArrayTreeNode extends Omit<TreeNode, 'children'> {

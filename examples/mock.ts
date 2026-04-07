@@ -1,4 +1,6 @@
-export const NodeArrayData = {
+import type { JsMindData } from "@frank17008/react-jsmind"
+
+export const NodeArrayData: JsMindData = {
   meta: {
     name: "demo",
     author: "demo",
@@ -28,7 +30,7 @@ export const NodeArrayData = {
   ],
 };
 
-export const NodeTreeData = {
+export const NodeTreeData: JsMindData = {
   meta: { name: "mind图", author: "Your Name", version: "0.8.5" },
   format: "node_tree",
   data: {
