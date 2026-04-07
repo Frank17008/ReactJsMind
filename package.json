@@ -1,6 +1,6 @@
 {
   "name": "@frank17008/react-jsmind",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "一个基于jsMind的react思维导图组件",
   "main": "dist/umd/index.js",
   "module": "dist/esm/index.mjs",
@@ -14,10 +14,6 @@
     "./dist/esm/index.min.css": "./dist/esm/index.min.css",
     "./dist/umd/index.min.css": "./dist/umd/index.min.css"
   },
-  "workspaces": [
-    ".",
-    "dist"
-  ],
   "homepage": "https://frank17008.github.io/ReactJsMind",
   "publishConfig": {
     "access": "public",
